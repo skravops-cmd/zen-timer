@@ -1,0 +1,179 @@
+/* Only adds styles not covered by existing styles.css */
+.progress-ring {
+  transform: rotate(-90deg);
+  width: 200px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+.progress-ring__background {
+  stroke: #222;
+  fill: none;
+  stroke-width: 6;
+}
+
+.progress-ring__circle {
+  stroke: var(--accent);
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.timer-display {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.timer-time {
+  font-size: 3rem;
+  font-weight: 600;
+}
+
+.timer-mode {
+  color: var(--muted);
+  font-size: 1.2rem;
+}
+
+.mode-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.mode-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #222;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--fg);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.mode-btn.active {
+  border-color: var(--accent);
+  background: rgba(79, 124, 255, 0.1);
+}
+
+.timer-controls {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.btn {
+  padding: 0.6rem 1.5rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s;
+  color: var(--fg);
+  background: rgba(20, 20, 25, 0.6);
+  border: 1px solid #222;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: #3b63e0;
+}
+
+.task-section {
+  margin-top: 2rem;
+}
+
+.task-input {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: 1px solid #222;
+  background: rgba(20, 20, 25, 0.6);
+  color: var(--fg);
+  margin-bottom: 1rem;
+}
+
+.task-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  border: 1px solid #222;
+  border-radius: 6px;
+  background: rgba(20, 20, 25, 0.6);
+  cursor: grab;
+}
+
+.task-item.dragging {
+  opacity: 0.5;
+}
+
+.task-item.completed {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.task-item .task-text {
+  flex: 1;
+}
+
+.task-item .task-est {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.task-item .task-actions {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal-content {
+  width: 90%;
+  max-width: 500px;
+}
+
+.task-checkbox {
+  accent-color: var(--accent);
+  margin-right: 0.5rem;
+}
+
+.task-edit-input {
+  flex: 1;
+  padding: 0.3rem;
+  border-radius: 4px;
+  border: 1px solid #222;
+  background: rgba(20, 20, 25, 0.8);
+  color: var(--fg);
+}
