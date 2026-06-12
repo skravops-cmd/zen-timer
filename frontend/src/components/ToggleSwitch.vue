@@ -13,11 +13,11 @@
     :class="disabled ? 'opacity-50 cursor-not-allowed' : ''"
   >
     <span
-      class="flex items-center rounded-full transition-colors duration-200"
+      class="relative rounded-full transition-colors duration-200 overflow-hidden"
       :class="[trackSizeClasses, trackColorClasses]"
     >
       <span
-        class="rounded-full bg-white shadow-sm ring-0 transition-transform duration-200"
+        class="absolute left-0 top-1/2 -translate-y-1/2 rounded-full bg-white shadow-sm ring-0 transition-transform duration-200"
         :class="[knobSizeClasses, knobPositionClasses]"
       />
     </span>

@@ -3,8 +3,10 @@ import { useAuthStore } from '../stores/auth'
 import TimerView from '../views/TimerView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
-import DashboardView from '../views/DashboardView.vue'
-import ProfileView from '../views/ProfileView.vue'
+
+const DashboardView = () => import('../views/DashboardView.vue')
+const ProfileView = () => import('../views/ProfileView.vue')
+const NotFoundView = () => import('../views/NotFoundView.vue')
 
 const routes = [
   { path: '/', name: 'timer', component: TimerView },
@@ -12,6 +14,7 @@ const routes = [
   { path: '/register', name: 'register', component: RegisterView },
   { path: '/dashboard', name: 'dashboard', component: DashboardView, meta: { requiresAuth: true } },
   { path: '/profile', name: 'profile', component: ProfileView, meta: { requiresAuth: true } },
+  { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFoundView },
 ]
 
 const router = createRouter({

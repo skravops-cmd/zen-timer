@@ -32,6 +32,30 @@ export const useTasksStore = defineStore('tasks', () => {
     }
   }
 
+  async function mergeLocalTasks() {
+    const localTasks = loadLocalRaw()
+    if (!localTasks || localTasks.length === 0) return
+    const auth = useAuthStore()
+    if (!auth.isAuthenticated) return
+    for (const local of localTasks) {
+      try {
+        await tasksAPI.create(local.title, local.estimated_pomodoros || 1)
+      } catch {
+        /* skip duplicates silently */
+      }
+    }
+    localStorage.removeItem(LOCAL_KEY)
+  }
+
+  function loadLocalRaw() {
+    try {
+      const raw = localStorage.getItem(LOCAL_KEY)
+      return raw ? JSON.parse(raw) : null
+    } catch {
+      return null
+    }
+  }
+
   async function addTask(title, estimatedPomodoros = 1) {
     const auth = useAuthStore()
     if (auth.isAuthenticated) {
@@ -94,9 +118,9 @@ export const useTasksStore = defineStore('tasks', () => {
     tasks.value = newOrder
     const auth = useAuthStore()
     if (auth.isAuthenticated) {
-      newOrder.forEach((t, i) => {
-        tasksAPI.update(t.id, { position: i }).catch(() => {})
-      })
+      Promise.all(
+        newOrder.map((t, i) => tasksAPI.update(t.id, { position: i }).catch(() => {}))
+      )
     } else {
       saveLocal()
     }

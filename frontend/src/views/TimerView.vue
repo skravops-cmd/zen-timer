@@ -24,7 +24,9 @@ import TimerControls from '../components/TimerControls.vue'
 import TaskList from '../components/TaskList.vue'
 import SettingsModal from '../components/SettingsModal.vue'
 import { useAuthStore } from '../stores/auth'
+import { useKeyboardShortcuts } from '../composables/useKeyboardShortcuts'
 
 const authStore = useAuthStore()
 const showSettings = ref(false)
+useKeyboardShortcuts()
 </script>

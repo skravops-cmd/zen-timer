@@ -2,8 +2,9 @@
   <Teleport to="body">
     <div v-if="show" @click.self="$emit('close')"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      role="dialog" aria-modal="true" aria-label="Timer settings"
     >
-      <div class="w-full max-w-sm mx-4 rounded-2xl p-6 border shadow-xl"
+      <div ref="modalRef" class="w-full max-w-sm mx-4 rounded-2xl p-6 border shadow-xl"
         :class="timerStore.settings.lightTheme ? 'bg-white border-gray-200' : 'bg-gray-900 border-gray-800'"
       >
         <div class="flex items-center justify-between mb-6">
@@ -37,12 +38,15 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import { useFocusTrap } from '../composables/useFocusTrap'
 import { useTimerStore } from '../stores/timer'
 import ToggleSwitch from './ToggleSwitch.vue'
 
-defineProps({ show: Boolean })
-defineEmits(['close'])
+const props = defineProps({ show: Boolean })
+const emit = defineEmits(['close'])
+const modalRef = ref(null)
+useFocusTrap(modalRef, () => props.show)
 
 const timerStore = useTimerStore()
 
