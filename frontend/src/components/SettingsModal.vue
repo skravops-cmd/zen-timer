@@ -29,8 +29,8 @@
               class="w-10 h-5 rounded-full transition-colors relative"
               :class="toggle.value ? 'bg-accent' : 'bg-gray-700'"
             >
-              <span class="absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform"
-                :class="toggle.value ? 'translate-x-5' : 'translate-x-0.5'"
+              <span class="absolute left-0 top-0.5 w-4 h-4 rounded-full bg-white transition-transform"
+                :class="toggle.value ? 'translate-x-6' : 'translate-x-0.5'"
               />
             </button>
           </div>
