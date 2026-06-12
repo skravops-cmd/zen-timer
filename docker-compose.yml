@@ -18,7 +18,7 @@ services:
       retries: 5
     restart: unless-stopped
 
-  api:
+  zen-timer-api:
     build:
       context: backend
       dockerfile: Dockerfile
@@ -44,7 +44,7 @@ services:
     ports:
       - "80:80"
     depends_on:
-      - api
+      - zen-timer-api
     restart: unless-stopped
 
 volumes:

@@ -1,12 +1,12 @@
 <template>
-  <header class="sticky top-0 z-50 backdrop-blur-md border-b border-gray-800"
+  <header role="banner" class="sticky top-0 z-50 backdrop-blur-md border-b border-gray-800"
     :class="{ 'border-gray-200': timerStore.settings.lightTheme }">
     <div class="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
-      <router-link to="/" class="text-lg font-semibold tracking-tight hover:opacity-80">
+      <router-link to="/" class="text-lg font-semibold tracking-tight hover:opacity-80" aria-label="Zen Timer home">
         Zen Timer
       </router-link>
 
-      <nav class="flex items-center gap-4 text-sm">
+      <nav aria-label="Main navigation" class="flex items-center gap-4 text-sm">
         <template v-if="authStore.isAuthenticated">
           <router-link to="/dashboard" class="hover:text-accent transition-colors">Dashboard</router-link>
           <router-link to="/profile" class="hover:text-accent transition-colors">Profile</router-link>

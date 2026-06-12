@@ -2,8 +2,9 @@
   <Teleport to="body">
     <div v-if="show" @click.self="$emit('close')"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      role="dialog" aria-modal="true" aria-label="Timer settings"
     >
-      <div class="w-full max-w-sm mx-4 rounded-2xl p-6 border shadow-xl"
+      <div ref="modalRef" class="w-full max-w-sm mx-4 rounded-2xl p-6 border shadow-xl"
         :class="timerStore.settings.lightTheme ? 'bg-white border-gray-200' : 'bg-gray-900 border-gray-800'"
       >
         <div class="flex items-center justify-between mb-6">
@@ -25,14 +26,10 @@
 
           <div v-for="toggle in toggles" :key="toggle.key" class="flex items-center justify-between">
             <span class="text-sm">{{ toggle.label }}</span>
-            <button @click="toggleSetting(toggle.key)"
-              class="w-10 h-5 rounded-full transition-colors relative"
-              :class="toggle.value ? 'bg-accent' : 'bg-gray-700'"
-            >
-              <span class="absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform"
-                :class="toggle.value ? 'translate-x-5' : 'translate-x-0.5'"
-              />
-            </button>
+            <ToggleSwitch
+              :modelValue="timerStore.settings[toggle.key]"
+              @update:modelValue="timerStore.updateSettings({ [toggle.key]: $event })"
+            />
           </div>
         </div>
       </div>
@@ -41,11 +38,15 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import { useFocusTrap } from '../composables/useFocusTrap'
 import { useTimerStore } from '../stores/timer'
+import ToggleSwitch from './ToggleSwitch.vue'
 
-defineProps({ show: Boolean })
-defineEmits(['close'])
+const props = defineProps({ show: Boolean })
+const emit = defineEmits(['close'])
+const modalRef = ref(null)
+useFocusTrap(modalRef, () => props.show)
 
 const timerStore = useTimerStore()
 
@@ -56,17 +57,13 @@ const sliders = computed(() => [
 ])
 
 const toggles = computed(() => [
-  { key: 'autoStartBreaks', label: 'Auto-start Breaks', value: timerStore.settings.autoStartBreaks },
-  { key: 'autoStartPomodoros', label: 'Auto-start Pomodoros', value: timerStore.settings.autoStartPomodoros },
-  { key: 'soundEnabled', label: 'Sound', value: timerStore.settings.soundEnabled },
-  { key: 'lightTheme', label: 'Light Theme', value: timerStore.settings.lightTheme },
+  { key: 'autoStartBreaks', label: 'Auto-start Breaks' },
+  { key: 'autoStartPomodoros', label: 'Auto-start Pomodoros' },
+  { key: 'soundEnabled', label: 'Sound' },
+  { key: 'lightTheme', label: 'Light Theme' },
 ])
 
 function updateSlider(key, value) {
   timerStore.updateSettings({ [key]: value })
-}
-
-function toggleSetting(key) {
-  timerStore.updateSettings({ [key]: !timerStore.settings[key] })
 }
 </script>

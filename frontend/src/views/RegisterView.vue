@@ -4,35 +4,17 @@
       <h1 class="text-2xl font-semibold mb-6">Create account</h1>
 
       <form @submit.prevent="handleRegister" class="space-y-4">
-        <div>
-          <label class="text-sm font-medium block mb-1">Email</label>
-          <input v-model="email" type="email" required
-            class="w-full px-4 py-2.5 rounded-lg bg-gray-800 border border-gray-700 text-sm focus:outline-none focus:border-accent transition-colors"
-            :class="{ 'bg-white border-gray-300': timerStore.settings.lightTheme }"
-          />
-        </div>
-        <div>
-          <label class="text-sm font-medium block mb-1">Username</label>
-          <input v-model="username" type="text" required minlength="3"
-            class="w-full px-4 py-2.5 rounded-lg bg-gray-800 border border-gray-700 text-sm focus:outline-none focus:border-accent transition-colors"
-            :class="{ 'bg-white border-gray-300': timerStore.settings.lightTheme }"
-          />
-        </div>
-        <div>
-          <label class="text-sm font-medium block mb-1">Password</label>
-          <input v-model="password" type="password" required minlength="8"
-            class="w-full px-4 py-2.5 rounded-lg bg-gray-800 border border-gray-700 text-sm focus:outline-none focus:border-accent transition-colors"
-            :class="{ 'bg-white border-gray-300': timerStore.settings.lightTheme }"
-          />
-        </div>
+        <BaseInput v-model="email" label="Email" type="email" required />
+
+        <BaseInput v-model="username" label="Username" type="text" required />
+
+        <BaseInput v-model="password" label="Password" type="password" required />
 
         <p v-if="error" class="text-sm text-red-400">{{ error }}</p>
 
-        <button type="submit" :disabled="loading"
-          class="w-full py-2.5 rounded-lg bg-accent text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-50"
-        >
+        <BaseButton type="submit" :loading="loading" variant="primary" size="lg" class="w-full">
           {{ loading ? 'Creating account...' : 'Create Account' }}
-        </button>
+        </BaseButton>
       </form>
 
       <p class="text-sm text-gray-500 text-center mt-6">
@@ -46,11 +28,11 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
-import { useTimerStore } from '../stores/timer'
+import BaseInput from '../components/BaseInput.vue'
+import BaseButton from '../components/BaseButton.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
-const timerStore = useTimerStore()
 
 const email = ref('')
 const username = ref('')
