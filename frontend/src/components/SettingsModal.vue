@@ -25,14 +25,10 @@
 
           <div v-for="toggle in toggles" :key="toggle.key" class="flex items-center justify-between">
             <span class="text-sm">{{ toggle.label }}</span>
-            <button @click="toggleSetting(toggle.key)"
-              class="w-10 h-5 rounded-full transition-colors relative"
-              :class="toggle.value ? 'bg-accent' : 'bg-gray-700'"
-            >
-              <span class="absolute left-0 top-0.5 w-4 h-4 rounded-full bg-white transition-transform"
-                :class="toggle.value ? 'translate-x-6' : 'translate-x-0.5'"
-              />
-            </button>
+            <ToggleSwitch
+              :modelValue="timerStore.settings[toggle.key]"
+              @update:modelValue="timerStore.updateSettings({ [toggle.key]: $event })"
+            />
           </div>
         </div>
       </div>
@@ -43,6 +39,7 @@
 <script setup>
 import { computed } from 'vue'
 import { useTimerStore } from '../stores/timer'
+import ToggleSwitch from './ToggleSwitch.vue'
 
 defineProps({ show: Boolean })
 defineEmits(['close'])
@@ -56,17 +53,13 @@ const sliders = computed(() => [
 ])
 
 const toggles = computed(() => [
-  { key: 'autoStartBreaks', label: 'Auto-start Breaks', value: timerStore.settings.autoStartBreaks },
-  { key: 'autoStartPomodoros', label: 'Auto-start Pomodoros', value: timerStore.settings.autoStartPomodoros },
-  { key: 'soundEnabled', label: 'Sound', value: timerStore.settings.soundEnabled },
-  { key: 'lightTheme', label: 'Light Theme', value: timerStore.settings.lightTheme },
+  { key: 'autoStartBreaks', label: 'Auto-start Breaks' },
+  { key: 'autoStartPomodoros', label: 'Auto-start Pomodoros' },
+  { key: 'soundEnabled', label: 'Sound' },
+  { key: 'lightTheme', label: 'Light Theme' },
 ])
 
 function updateSlider(key, value) {
   timerStore.updateSettings({ [key]: value })
-}
-
-function toggleSetting(key) {
-  timerStore.updateSettings({ [key]: !timerStore.settings[key] })
 }
 </script>
