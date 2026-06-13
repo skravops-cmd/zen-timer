@@ -1,19 +1,39 @@
 <template>
   <div class="pt-6">
-    <h1 class="text-2xl font-semibold mb-6">Dashboard</h1>
+    <h1 class="text-2xl font-semibold mb-6">
+      Dashboard
+    </h1>
 
-    <ErrorState v-if="error" title="Failed to load stats" :message="error" retry-label="Retry" @retry="fetchStats" />
+    <ErrorState
+      v-if="error"
+      title="Failed to load stats"
+      :message="error"
+      retry-label="Retry"
+      @retry="fetchStats"
+    />
 
-    <div v-else-if="loading" class="text-center text-gray-500 py-12">Loading stats...</div>
+    <div
+      v-else-if="loading"
+      class="text-center text-gray-500 py-12"
+    >
+      Loading stats...
+    </div>
 
     <template v-else-if="stats">
-      <StatsCards :cards="statCards" :light="timerStore.settings.lightTheme" />
+      <StatsCards
+        :cards="statCards"
+        :light="timerStore.settings.lightTheme"
+      />
 
       <div class="mt-8">
-        <h2 class="text-sm font-medium opacity-60 mb-3">Last 30 Days</h2>
+        <h2 class="text-sm font-medium opacity-60 mb-3">
+          Last 30 Days
+        </h2>
         <BaseCard padding="sm">
           <div class="flex items-end gap-1 h-24">
-            <div v-for="day in stats.daily_stats" :key="day.date"
+            <div
+              v-for="day in stats.daily_stats"
+              :key="day.date"
               class="flex-1 rounded-t transition-all hover:opacity-80 relative group"
               :style="{ height: barHeight(day.total_seconds) + '%', backgroundColor: day.total_seconds > 0 ? '#7c3aed' : '#1f2937' }"
               :class="{ 'bg-gray-200': timerStore.settings.lightTheme && day.total_seconds === 0 }"
@@ -27,9 +47,16 @@
       </div>
 
       <div class="mt-8">
-        <h2 class="text-sm font-medium opacity-60 mb-3">Mode Breakdown</h2>
+        <h2 class="text-sm font-medium opacity-60 mb-3">
+          Mode Breakdown
+        </h2>
         <div class="space-y-2">
-          <BaseCard v-for="mode in stats.mode_breakdown" :key="mode.mode" padding="sm" class="flex items-center justify-between">
+          <BaseCard
+            v-for="mode in stats.mode_breakdown"
+            :key="mode.mode"
+            padding="sm"
+            class="flex items-center justify-between"
+          >
             <span class="text-sm capitalize">{{ mode.mode.replace('_', ' ') }}</span>
             <span class="text-sm tabular-nums text-gray-400">
               {{ Math.round(mode.total_seconds / 60) }} min · {{ mode.session_count }} sessions
@@ -39,10 +66,14 @@
       </div>
 
       <div class="mt-8">
-        <h2 class="text-sm font-medium opacity-60 mb-3">This Month</h2>
+        <h2 class="text-sm font-medium opacity-60 mb-3">
+          This Month
+        </h2>
         <BaseCard padding="sm">
           <div class="grid grid-cols-7 gap-1">
-            <div v-for="day in monthlyHeatmap" :key="day.date"
+            <div
+              v-for="day in monthlyHeatmap"
+              :key="day.date"
               class="aspect-square rounded transition-colors relative group"
               :style="{ backgroundColor: heatmapColor(day.total_seconds) }"
             >
@@ -55,7 +86,8 @@
       </div>
     </template>
 
-    <EmptyState v-else-if="!loading && !stats"
+    <EmptyState
+      v-else-if="!loading && !stats"
       title="No stats yet"
       message="Complete a few focus sessions to see your progress."
       action-label="Start a timer"

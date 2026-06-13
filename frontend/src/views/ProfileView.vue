@@ -1,19 +1,36 @@
 <template>
   <div class="pt-6">
-    <h1 class="text-2xl font-semibold mb-6">Profile</h1>
+    <h1 class="text-2xl font-semibold mb-6">
+      Profile
+    </h1>
 
-    <BaseCard padding="lg" class="space-y-4">
+    <BaseCard
+      padding="lg"
+      class="space-y-4"
+    >
       <div>
-        <p class="text-xs opacity-60">Username</p>
-        <p class="text-sm font-medium">{{ authStore.user?.username }}</p>
+        <p class="text-xs opacity-60">
+          Username
+        </p>
+        <p class="text-sm font-medium">
+          {{ authStore.user?.username }}
+        </p>
       </div>
       <div>
-        <p class="text-xs opacity-60">Email</p>
-        <p class="text-sm font-medium">{{ authStore.user?.email }}</p>
+        <p class="text-xs opacity-60">
+          Email
+        </p>
+        <p class="text-sm font-medium">
+          {{ authStore.user?.email }}
+        </p>
       </div>
       <div>
-        <p class="text-xs opacity-60">Member since</p>
-        <p class="text-sm font-medium">{{ formattedDate }}</p>
+        <p class="text-xs opacity-60">
+          Member since
+        </p>
+        <p class="text-sm font-medium">
+          {{ formattedDate }}
+        </p>
       </div>
     </BaseCard>
   </div>

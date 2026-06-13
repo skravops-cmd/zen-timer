@@ -2,13 +2,20 @@
   <Teleport to="body">
     <div class="fixed bottom-4 right-4 z-[100] flex flex-col gap-2 max-w-sm">
       <TransitionGroup name="toast">
-        <div v-for="toast in toasts" :key="toast.id"
+        <div
+          v-for="toast in toasts"
+          :key="toast.id"
           class="flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg border text-sm animate-slide-up"
           :class="toastClass(toast.type)"
         >
           <span class="text-lg leading-none">{{ iconFor(toast.type) }}</span>
           <span class="flex-1">{{ toast.message }}</span>
-          <button @click="removeToast(toast.id)" class="text-current opacity-60 hover:opacity-100 transition-opacity text-lg leading-none">&times;</button>
+          <button
+            class="text-current opacity-60 hover:opacity-100 transition-opacity text-lg leading-none"
+            @click="removeToast(toast.id)"
+          >
+            &times;
+          </button>
         </div>
       </TransitionGroup>
     </div>

@@ -8,7 +8,6 @@ from sqlalchemy import text
 
 from app.api.v1.auth import router as auth_router
 from app.api.v1.sessions import router as sessions_router
-from app.api.v1.tasks import router as tasks_router
 from app.api.v1.stats import router as stats_router
 from app.core.config import settings
 from app.db.database import engine
@@ -40,7 +39,6 @@ app.add_middleware(
 
 app.include_router(auth_router, prefix=settings.API_V1_PREFIX)
 app.include_router(sessions_router, prefix=settings.API_V1_PREFIX)
-app.include_router(tasks_router, prefix=settings.API_V1_PREFIX)
 app.include_router(stats_router, prefix=settings.API_V1_PREFIX)
 
 

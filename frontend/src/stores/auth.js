@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { authAPI } from '../api/auth'
 import { setOnUnauthorized } from '../api/client'
-import { useTasksStore } from './tasks'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null)
@@ -72,18 +71,12 @@ export const useAuthStore = defineStore('auth', () => {
     const res = await authAPI.login(username, password)
     setTokens(res.access_token, res.refresh_token)
     user.value = await authAPI.me()
-    const tasksStore = useTasksStore()
-    await tasksStore.mergeLocalTasks()
-    await tasksStore.fetchTasks()
   }
 
   async function register(email, username, password) {
     const res = await authAPI.register(email, username, password)
     setTokens(res.access_token, res.refresh_token)
     user.value = await authAPI.me()
-    const tasksStore = useTasksStore()
-    await tasksStore.mergeLocalTasks()
-    await tasksStore.fetchTasks()
   }
 
   function logout() {

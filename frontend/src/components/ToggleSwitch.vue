@@ -6,11 +6,11 @@
     :aria-label="label"
     :aria-disabled="disabled || undefined"
     :disabled="disabled"
+    class="inline-flex items-center justify-center min-w-[44px] min-h-[44px] cursor-pointer rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 transition-opacity duration-200"
+    :class="disabled ? 'opacity-50 cursor-not-allowed' : ''"
     @click="toggle"
     @keydown.enter.prevent="toggle"
     @keydown.space.prevent="toggle"
-    class="inline-flex items-center justify-center min-w-[44px] min-h-[44px] cursor-pointer rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 transition-opacity duration-200"
-    :class="disabled ? 'opacity-50 cursor-not-allowed' : ''"
   >
     <span
       class="relative rounded-full transition-colors duration-200 overflow-hidden"
@@ -24,50 +24,34 @@
   </button>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { computed } from 'vue'
 
-export type ToggleSize = 'sm' | 'md' | 'lg'
-export type ToggleColor = 'accent' | 'green' | 'blue' | 'red' | 'amber'
-
-interface Props {
-  modelValue?: boolean
-  disabled?: boolean
-  label?: string
-  size?: ToggleSize
-  color?: ToggleColor
-}
-
-interface Emits {
-  (e: 'update:modelValue', value: boolean): void
-  (e: 'change', value: boolean): void
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  modelValue: false,
-  disabled: false,
-  label: '',
-  size: 'md',
-  color: 'accent',
+const props = defineProps({
+  modelValue: { type: Boolean, default: false },
+  disabled: { type: Boolean, default: false },
+  label: { type: String, default: '' },
+  size: { type: String, default: 'md' },
+  color: { type: String, default: 'accent' },
 })
 
-const emit = defineEmits<Emits>()
+const emit = defineEmits(['update:modelValue', 'change'])
 
 const isOn = computed(() => props.modelValue)
 
-const sizeMap: Record<ToggleSize, { track: string; knob: string }> = {
+const sizeMap = {
   sm: { track: 'w-8 h-4', knob: 'w-3 h-3' },
   md: { track: 'w-11 h-6', knob: 'w-5 h-5' },
   lg: { track: 'w-14 h-8', knob: 'w-7 h-7' },
 }
 
-const offsetMap: Record<ToggleSize, { off: string; on: string }> = {
+const offsetMap = {
   sm: { off: 'translate-x-[2px]', on: 'translate-x-[18px]' },
   md: { off: 'translate-x-[3px]', on: 'translate-x-[21px]' },
   lg: { off: 'translate-x-[3px]', on: 'translate-x-[25px]' },
 }
 
-const colorMap: Record<ToggleColor, string> = {
+const colorMap = {
   accent: 'bg-accent',
   green: 'bg-green-500',
   blue: 'bg-blue-500',

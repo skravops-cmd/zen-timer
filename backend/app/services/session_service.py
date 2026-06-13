@@ -1,6 +1,6 @@
 from datetime import date, timedelta, datetime, timezone
 
-from sqlalchemy import select, func, case
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import TimerSession

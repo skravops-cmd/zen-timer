@@ -41,8 +41,8 @@ docker compose up --build
 
 ## Key Design
 
-- Guest mode: timer + tasks in localStorage, no API calls
-- Auth mode: timer sessions synced to server on completion, tasks synced
+- Guest mode: timer in localStorage, no API calls
+- Auth mode: timer sessions synced to server on completion
 - API uses JWT Bearer tokens (30min access, 7d refresh)
 - Tables auto-created on startup via SQLAlchemy metadata
 - No external chart library — stats use CSS/SVG bar charts
