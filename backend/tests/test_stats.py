@@ -11,7 +11,8 @@ class TestGetStats:
         assert data['total_sessions'] == 0
         assert data['current_streak'] == 0
         assert data['average_session_seconds'] == 0
-        assert data['daily_stats'] == []
+        assert len(data['daily_stats']) == 30  # last 30 days filled with zeros
+        assert all(d['total_seconds'] == 0 for d in data['daily_stats'])
         assert data['mode_breakdown'] == []
         assert data['monthly_heatmap'] == []
 

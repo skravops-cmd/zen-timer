@@ -2,8 +2,18 @@ import uuid
 
 import pytest
 from httpx import ASGITransport, AsyncClient
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncSession
+from sqlalchemy.pool import NullPool
 
+from app.core.config import settings
+from app.db import database
 from app.main import app
+
+# Replace engine with NullPool to prevent connection reuse across tests
+database.engine = create_async_engine(settings.DATABASE_URL, echo=False, poolclass=NullPool)
+database.async_session_factory = async_sessionmaker(
+    database.engine, class_=AsyncSession, expire_on_commit=False
+)
 
 
 @pytest.fixture
