@@ -80,7 +80,7 @@ jobs:
         run: |
           cd backend
           python -m app.migrate
-          PYTHONPATH=. pytest --cov=app --cov-fail-under=80 -v
+          PYTHONPATH=. pytest --cov=app --cov-config=.coveragerc --cov-fail-under=80 -v
         env:
           DATABASE_URL: postgresql+asyncpg://zentimer:zentimer123@localhost:5432/zentimer
           JWT_SECRET: test-secret
