@@ -1,24 +1,61 @@
 <template>
   <div class="flex flex-col items-center pt-16">
     <div class="w-full max-w-sm">
-      <h1 class="text-2xl font-semibold mb-6">Create account</h1>
+      <h1 class="text-2xl font-semibold mb-6">
+        Create account
+      </h1>
 
-      <form @submit.prevent="handleRegister" class="space-y-4">
-        <BaseInput v-model="email" label="Email" type="email" required />
+      <form
+        class="space-y-4"
+        @submit.prevent="handleRegister"
+      >
+        <BaseInput
+          v-model="email"
+          label="Email"
+          type="email"
+          required
+        />
 
-        <BaseInput v-model="username" label="Username" type="text" required />
+        <BaseInput
+          v-model="username"
+          label="Username"
+          type="text"
+          required
+        />
 
-        <BaseInput v-model="password" label="Password" type="password" required />
+        <BaseInput
+          v-model="password"
+          label="Password"
+          type="password"
+          required
+        />
 
-        <p v-if="error" class="text-sm text-red-400">{{ error }}</p>
+        <p
+          v-if="error"
+          class="text-sm text-red-400"
+        >
+          {{ error }}
+        </p>
 
-        <BaseButton type="submit" :loading="loading" variant="primary" size="lg" class="w-full">
+        <BaseButton
+          type="submit"
+          :loading="loading"
+          variant="primary"
+          size="lg"
+          class="w-full"
+        >
           {{ loading ? 'Creating account...' : 'Create Account' }}
         </BaseButton>
       </form>
 
       <p class="text-sm text-gray-500 text-center mt-6">
-        Already have an account? <router-link to="/login" class="text-accent hover:underline">Sign in</router-link>
+        Already have an account?
+        <router-link
+          to="/login"
+          class="text-accent hover:underline"
+        >
+          Sign in
+        </router-link>
       </p>
     </div>
   </div>
