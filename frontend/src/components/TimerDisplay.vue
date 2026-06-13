@@ -1,15 +1,33 @@
 <template>
-  <div class="relative flex items-center justify-center"
+  <div
+    class="relative flex items-center justify-center"
     role="timer"
     :aria-label="`${timerStore.currentLabel} timer, ${formattedTime} remaining`"
     :aria-valuenow="Math.ceil(timerStore.remaining / 1000)"
     aria-valuemin="0"
     :aria-valuemax="getTotalSeconds()"
   >
-    <svg class="timer-ring w-72 h-72" viewBox="0 0 200 200">
-      <circle cx="100" cy="100" r="90" fill="none" stroke="currentColor" stroke-width="4"
-        class="text-gray-800" :class="{ 'text-gray-200': timerStore.settings.lightTheme }" />
-      <circle cx="100" cy="100" r="90" fill="none" stroke="#7c3aed" stroke-width="4"
+    <svg
+      class="timer-ring w-72 h-72"
+      viewBox="0 0 200 200"
+    >
+      <circle
+        cx="100"
+        cy="100"
+        r="90"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="4"
+        class="text-gray-800"
+        :class="{ 'text-gray-200': timerStore.settings.lightTheme }"
+      />
+      <circle
+        cx="100"
+        cy="100"
+        r="90"
+        fill="none"
+        stroke="#7c3aed"
+        stroke-width="4"
         stroke-linecap="round"
         :stroke-dasharray="circumference"
         :stroke-dashoffset="circumference * (1 - timerStore.progress)"
