@@ -167,3 +167,13 @@ jobs:
           docker pull ${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
           docker tag ${{ env.IMAGE_FRONTEND }}:${{ github.sha }} ${{ env.IMAGE_FRONTEND }}:latest
           docker push ${{ env.IMAGE_FRONTEND }}:latest
+
+      - name: Trigger deploy
+        run: >
+          gh workflow run deploy.yaml
+          --repo skravops-cmd/homelab-gitops
+          --ref main
+          --field app=zen-timer
+          --field sha=${{ github.sha }}
+        env:
+          GH_TOKEN: ${{ secrets.HOMELAB_GITOPS_PAT }}
