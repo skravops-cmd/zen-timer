@@ -44,9 +44,6 @@ These questions were identified during the frontend architecture assessment and 
 **Q12:** Is accessibility compliance a requirement (WCAG 2.1 AA)?
 > *Affects: scope of accessibility work*
 
-**Q13:** Should the guest-to-auth task migration be automated?
-> *Affects: task merge strategy*
-
 **Q14:** Should the app support multiple languages (i18n)?
 > *Affects: UI text architecture*
 

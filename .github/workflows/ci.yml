@@ -1,0 +1,169 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE: ghcr.io/skravops-cmd/zen-timer-api
+  IMAGE_FRONTEND: ghcr.io/skravops-cmd/zen-timer-frontend
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Backend lint
+        run: |
+          pip install ruff
+          ruff check
+
+      - name: Frontend lint
+        run: |
+          cd frontend
+          npm install
+          npm run lint
+
+  build:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    needs: lint
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: zentimer
+          POSTGRES_PASSWORD: zentimer123
+          POSTGRES_DB: zentimer
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready -U zentimer
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT }}
+
+      - name: Build and push backend image
+        run: |
+          docker build -t ${{ env.IMAGE }}:${{ github.sha }} backend
+          docker push ${{ env.IMAGE }}:${{ github.sha }}
+
+      - name: Build and push frontend image
+        run: |
+          docker build -t ${{ env.IMAGE_FRONTEND }}:${{ github.sha }} frontend
+          docker push ${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
+
+      - name: Install dependencies
+        run: pip install -r backend/requirements.txt
+
+      - name: Create tables and run unit tests with coverage
+        run: |
+          cd backend
+          python -m app.migrate
+          PYTHONPATH=. pytest --cov=app --cov-fail-under=80 -v
+        env:
+          DATABASE_URL: postgresql+asyncpg://zentimer:zentimer123@localhost:5432/zentimer
+          JWT_SECRET: test-secret
+
+  integration:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    needs: build
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: zentimer
+          POSTGRES_PASSWORD: zentimer123
+          POSTGRES_DB: zentimer
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready -U zentimer
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT }}
+
+      - name: Pull backend image
+        run: docker pull ${{ env.IMAGE }}:${{ github.sha }}
+
+      - name: Start API container
+        run: |
+          docker run -d --name zen-timer-api \
+            --network host \
+            -e DATABASE_URL=postgresql+asyncpg://zentimer:zentimer123@localhost:5432/zentimer \
+            -e JWT_SECRET=test-secret \
+            -e CORS_ORIGINS='["http://localhost:5173","http://localhost:8000","http://localhost"]' \
+            ${{ env.IMAGE }}:${{ github.sha }} \
+            sh -c "python -m app.migrate && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+      - name: Wait for API to be healthy
+        run: |
+          for i in $(seq 1 30); do
+            curl -s http://localhost:8000/api/v1/health && break
+            sleep 1
+          done
+
+      - name: Run integration tests
+        run: |
+          pip install -r backend/requirements.txt
+          cd backend
+          PYTHONPATH=. pytest tests/ -v
+        env:
+          DATABASE_URL: postgresql+asyncpg://zentimer:zentimer123@localhost:5432/zentimer
+          JWT_SECRET: test-secret
+
+  release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: integration
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT }}
+
+      - name: Promote backend image to latest
+        run: |
+          docker pull ${{ env.IMAGE }}:${{ github.sha }}
+          docker tag ${{ env.IMAGE }}:${{ github.sha }} ${{ env.IMAGE }}:latest
+          docker push ${{ env.IMAGE }}:latest
+
+      - name: Promote frontend image to latest
+        run: |
+          docker pull ${{ env.IMAGE_FRONTEND }}:${{ github.sha }}
+          docker tag ${{ env.IMAGE_FRONTEND }}:${{ github.sha }} ${{ env.IMAGE_FRONTEND }}:latest
+          docker push ${{ env.IMAGE_FRONTEND }}:latest

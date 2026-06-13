@@ -7,8 +7,6 @@
       Guest mode — <router-link to="/register" class="text-accent hover:underline">register</router-link> to track progress
     </div>
 
-    <TaskList />
-
     <button @click="showSettings = true" class="mt-6 text-sm text-gray-500 hover:text-white transition-colors">
       Settings
     </button>
@@ -21,7 +19,6 @@
 import { ref } from 'vue'
 import TimerDisplay from '../components/TimerDisplay.vue'
 import TimerControls from '../components/TimerControls.vue'
-import TaskList from '../components/TaskList.vue'
 import SettingsModal from '../components/SettingsModal.vue'
 import { useAuthStore } from '../stores/auth'
 import { useKeyboardShortcuts } from '../composables/useKeyboardShortcuts'
